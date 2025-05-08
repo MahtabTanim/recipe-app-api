@@ -16,3 +16,5 @@ docker compose up
 
 Github Actions for Unit test and Linting:
 Trigger : Push
+Django Test Suite
+Postgres database with Docker
