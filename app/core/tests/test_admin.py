@@ -11,7 +11,6 @@ class AdminTest(TestCase):
 
     def setUp(self):
         """create user and client"""
-
         self.client = Client()
         email = "test@example.com"
         password = "testpassword"
