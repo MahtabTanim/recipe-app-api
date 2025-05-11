@@ -1,3 +1,5 @@
+from decimal import Decimal
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
@@ -92,3 +94,24 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_level):
         return True
+
+
+class Recipe(models.Model):
+    """Recipe Model"""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(max_length=100, blank=True, null=True)
+    time_minutes = models.IntegerField(default=0)
+    price = models.DecimalField(
+        default=Decimal(0),
+        max_digits=7,
+        decimal_places=2,
+    )
+    description = models.TextField(null=True, blank=True)
+    link = models.CharField(max_length=250, blank=True, null=True)
+
+    def __str__(self):
+        return self.title

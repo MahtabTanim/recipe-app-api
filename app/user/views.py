@@ -1,8 +1,8 @@
-from rest_framework import generics
-from .serializers import UserSerializer, TokenSerializer
+from rest_framework import authentication, generics, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from rest_framework import authentication, permissions
+
+from .serializers import TokenSerializer, UserSerializer
 
 # Create your views here.
 
