@@ -2,8 +2,15 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+import os
+import uuid
 
-# Create your models here.
+
+def recipe_image_fileptah(instance, file_name):
+    """returns a unique filename"""
+    ext = os.path.splitext(file_name)[1]
+    file_name = f"{uuid.uuid4()}{ext}"
+    return os.path.join("uploads", "recipe", file_name)
 
 
 class UserManager(BaseUserManager):
@@ -114,6 +121,7 @@ class Recipe(models.Model):
     link = models.CharField(max_length=250, blank=True, null=True)
     tags = models.ManyToManyField("Tag")
     ingredients = models.ManyToManyField("Ingredient")
+    image = models.ImageField(null=True, upload_to=recipe_image_fileptah)
 
     def __str__(self):
         return self.title
