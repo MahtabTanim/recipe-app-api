@@ -4,20 +4,16 @@ from django.contrib.auth import get_user_model
 from core import models
 
 
-def create_user(
-    email="test@example.com",
-    password="testpassword",
-    first_name="testname",
-    last_name="lastname",
-    username="testuser",
-):
-    return get_user_model().objects.create_user(
-        email,
-        password,
-        first_name,
-        last_name,
-        username,
-    )
+def create_user(**kwargs):
+    sample = {
+        "email": "test@example.com",
+        "password": "testpassword",
+        "first_name": "testname",
+        "last_name": "lastname",
+        "username": "testuser",
+    }
+    sample.update(kwargs)
+    return get_user_model().objects.create_user(**sample)
 
 
 class ModelTest(TestCase):
@@ -118,3 +114,12 @@ class ModelTest(TestCase):
         )
         tag = models.Tag.objects.create(user=user, name="testtag")
         self.assertEqual(str(tag), tag.name)
+
+    def test_create_ingredient(self):
+        """Test creating an ingredient"""
+        user = create_user(
+            email="ttt@ttt.com",
+            username="test22",
+        )
+        ingredient = models.Ingredient.objects.create(user=user, name="Ing1")
+        self.assertEqual(ingredient.name, str(ingredient))
