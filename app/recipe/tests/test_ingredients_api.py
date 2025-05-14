@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APIClient
 from recipe.serializers import IngredientSerializer
+from .test_recipe_api import create_recipe
 
 ingredients_url = reverse("recipe:ingredient-list")
 
@@ -92,9 +93,45 @@ class PrivateTagsAPITests(TestCase):
         self.assertEqual(ingredient.name, payload["name"])
 
     def test_delete_ingredient(self):
+        """Test delete Ingredient from db"""
         ingredient = Ingredient.objects.create(user=self.user, name="Ing1")
         ingredient_url = ingredient_detail_url(ingredient_id=ingredient.id)
         res = self.client.delete(ingredient_url)
         ingredient = Ingredient.objects.filter(user=self.user)
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(ingredient.exists())
+
+    def test_filter_ingredients_assigned_to_recipes(self):
+        """Filter ingredients those are assigned to recipes"""
+        r1 = create_recipe(user=self.user)
+        ingredient1 = Ingredient.objects.create(user=self.user, name="Ing1")
+        ingredient2 = Ingredient.objects.create(user=self.user, name="Ing2")
+        ingredient3 = Ingredient.objects.create(user=self.user, name="Ing3")
+        r1.ingredients.add(ingredient1)
+        r1.ingredients.add(ingredient2)
+        params = {"assigned_only": True}
+        res = self.client.get(ingredients_url, params)
+        s1 = IngredientSerializer(ingredient1)
+        s2 = IngredientSerializer(ingredient2)
+        s3 = IngredientSerializer(ingredient3)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
+
+    def test_filtered_ingredients_unique(self):
+        """Filter unique ingredients those are assigned to recipes"""
+        r1 = create_recipe(user=self.user)
+        r2 = create_recipe(user=self.user)
+        ingredient1 = Ingredient.objects.create(user=self.user, name="Ing1")
+        ingredient2 = Ingredient.objects.create(user=self.user, name="Ing2")
+        r1.ingredients.add(ingredient1)
+        r2.ingredients.add(ingredient1)
+        params = {"assigned_only": True}
+        res = self.client.get(ingredients_url, params)
+        s1 = IngredientSerializer(ingredient1)
+        s2 = IngredientSerializer(ingredient2)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn(s1.data, res.data)
+        self.assertNotIn(s2.data, res.data)
+        self.assertEqual(len(res.data), 1)
