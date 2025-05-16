@@ -21,3 +21,5 @@ Postgres database with Docker
 
 Custom django command that waits the app until the database is loaded:
 python manage.py wait_for_db
+
+nginx for reverse proxy
