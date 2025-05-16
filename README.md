@@ -23,3 +23,5 @@ Custom django command that waits the app until the database is loaded:
 python manage.py wait_for_db
 
 nginx for reverse proxy
+
+deploy on aws
