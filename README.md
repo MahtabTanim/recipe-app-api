@@ -25,3 +25,11 @@ python manage.py wait_for_db
 nginx for reverse proxy
 
 deploy on aws
+
+You have to login using your userid to access the swagger UI page
+for browser :
+You can either Use sessionauthentication which is default to django
+or You can use tokenauth
+for API clients :
+You can authenticate using tokenauthentication by this URl
+Alternatively to test just using token , you can use the /api/user/logout endpoint to logout from the session and use just the token authentication

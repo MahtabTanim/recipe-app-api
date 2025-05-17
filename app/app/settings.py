@@ -146,11 +146,18 @@ AUTH_USER_MODEL = "core.User"
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASS": "rest_framework.authentication.TokenAuthentication",  # noqa
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],  # noqa
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
 SPECTACULAR_SETTINGS = {
     "COMPONENT_SPLIT_REQUEST": True,
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,  # Keeps login across page loads
+        "withCredentials": True,  # Allows sending session cookies
+    },
 }

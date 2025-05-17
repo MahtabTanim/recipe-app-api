@@ -1,7 +1,10 @@
 from . import serializers
 from core.models import Recipe, Tag, Ingredient
 from rest_framework import viewsets, mixins
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import (
+    TokenAuthentication,
+    SessionAuthentication,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
@@ -36,6 +39,7 @@ class RecipeViewset(viewsets.ModelViewSet):
     serializer_class = serializers.RecipeDetailSerializer
     authentication_classes = [
         TokenAuthentication,
+        SessionAuthentication,
     ]
     permission_classes = [
         IsAuthenticated,
@@ -112,6 +116,7 @@ class BaseRecipeAttrViewset(
 ):
     authentication_classes = [
         TokenAuthentication,
+        SessionAuthentication,
     ]
     permission_classes = [
         IsAuthenticated,
