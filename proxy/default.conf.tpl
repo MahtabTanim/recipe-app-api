@@ -1,5 +1,6 @@
 server{
     listen ${LISTEN_PORT};
+    server_name apilab.store www.apilab.store;
     location /static{
         alias /vol/static;
     }

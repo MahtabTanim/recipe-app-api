@@ -156,3 +156,10 @@ You must be **logged in** to access Swagger at `/api/docs`.
 
 - Reverse proxy via **NGINX**
 - Ready for deployment to **AWS**
+
+# 🌍 Live Preview Available: [apilab.store](https://apilab.store)
+
+> 🚀 **Try it now!**
+> Register an account and enjoy exploring the Recipe App API.
+
+---
