@@ -1,4 +1,4 @@
-from rest_framework import authentication, generics, permissions
+from rest_framework import authentication, generics, permissions, status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from django.shortcuts import render, redirect
@@ -7,7 +7,9 @@ from django.contrib.auth import get_user_model
 from .serializers import TokenSerializer, UserSerializer
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -80,14 +82,19 @@ def login_view(request):
                 return redirect("user:register")
         else:
             messages.error(request, "Please Fill in both fields")
-
+    if request.user.is_authenticated:
+        return redirect("api-ui")
     return render(
         request,
         "login.html",
     )
 
 
-@csrf_exempt  # Needed if you're calling from Swagger and not handling CSRF
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def logout_view(request):
     logout(request)
-    return redirect("api-ui")
+    return Response(
+        {"detail": "Successfully logged out."},
+        status=status.HTTP_200_OK,
+    )
